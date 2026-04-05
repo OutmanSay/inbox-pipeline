@@ -13,9 +13,9 @@ from contextlib import contextmanager
 from datetime import datetime
 from pathlib import Path
 
-VAULT = Path(os.getenv("OBSIDIAN_VAULT", os.path.expanduser("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vault")))
+VAULT = Path("/Users/danco/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vault")
 OS_DIR = VAULT / "00-OS"
-RUNTIME_DIR = Path(os.getenv("INBOX_RUNTIME_DIR", os.path.expanduser("~/.openclaw/runtime")))
+RUNTIME_DIR = Path("/Users/danco/.openclaw/runtime")
 
 QUEUE_FILE = RUNTIME_DIR / "inbox-write-queue.json"
 DECISION_FILE = RUNTIME_DIR / "inbox-archive-decisions.json"
@@ -39,7 +39,6 @@ DOC_MAP = {
     "OS-个人想法与灵感": VAULT / "01-Area" / "个人" / "OS-个人想法与灵感.md",
     "OS-个人思考与反思": VAULT / "01-Area" / "个人" / "OS-个人思考与反思.md",
     "OS-工具与方法论": VAULT / "01-Area" / "个人" / "OS-工具与方法论.md",
-    "OS-个人项目与研究": VAULT / "01-Area" / "个人" / "OS-工具与方法论.md",  # 旧名兼容，实际写到工具与方法论
     "健康-MasterLog": VAULT / "01-Area" / "健康" / "健康-MasterLog.md",
     "个人-美食记录": VAULT / "01-Area" / "个人" / "个人-美食记录.md",
 }
@@ -640,13 +639,15 @@ def main() -> int:
                     lines.append("")
                     errors += 1
                     continue
-                lines.append("- result: ignored")
+                lines.append("- result: ignored (capture file kept in place)")
                 lines.append(f"- target_doc: {item.get('target_doc', '')}")
                 lines.append("")
                 ignored += 1
-                resolved_ids.add(item_id)
+                # 忽略的 ID 不加入 resolved_ids，capture 文件保留原位不移走
+                # 但从队列移除（不再待确认）
 
-            remaining_queue = [item for item in queue if str(item.get("id")) not in resolved_ids]
+            ignored_ids_set = set(ignore_ids)
+            remaining_queue = [item for item in queue if str(item.get("id")) not in resolved_ids and str(item.get("id")) not in ignored_ids_set]
             untouched = len(remaining_queue)
 
             # ── 从全量 decisions 补充 health_ids（非 confirm 路径的也要识别）──
