@@ -14,8 +14,8 @@ from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 
-RUNTIME_DIR = Path(os.getenv("INBOX_RUNTIME_DIR", os.path.expanduser("~/.openclaw/runtime")))
-VAULT = Path(os.getenv("OBSIDIAN_VAULT", os.path.expanduser("~/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vault")))
+RUNTIME_DIR = Path("/Users/danco/.openclaw/runtime")
+VAULT = Path("/Users/danco/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Vault")
 DECISIONS_FILE = RUNTIME_DIR / "inbox-archive-decisions.json"
 MATERIAL_FILE = RUNTIME_DIR / "inbox-material.md"
 INBOX_DAILY_DIR = VAULT / "00-OS" / "inbox" / "review" / "inbox-daily"
@@ -39,7 +39,6 @@ CATEGORY_LABELS = {
     "me": "关于我",
     "work_info": "工作进展",
     "work_relation": "工作关系",
-    "personal_project": "个人项目与研究",
     "personal_reflection": "个人思考与反思",
     "temp_notice": "临时通知",
     "ideas": "想法与灵感",
@@ -52,7 +51,7 @@ CATEGORY_ORDER = [
     "temp", "inbox", "ignore",
     # 兼容旧分类
     "work_info", "work_relation",
-    "personal_project", "personal_reflection",
+    "personal_reflection",
     "me", "ideas", "temp_notice",
 ]
 
@@ -72,7 +71,6 @@ DOC_PATH_MAP = {
     "OS-工作-关系互动记录": "OS-工作-关系互动记录",
     "工作-人物画像与协作地图": "工作-人物画像与协作地图",
     "OS-个人想法与灵感": "OS-个人想法与灵感",
-    "OS-个人项目与研究": "OS-个人项目与研究",
     "OS-个人思考与反思": "OS-个人思考与反思",
     "OS-工具与方法论": "OS-工具与方法论",
     "健康-MasterLog": "健康-MasterLog",
@@ -236,7 +234,9 @@ def main() -> int:
         target = d.get("target_doc", "")
 
         if action == "promote_to_note":
-            where = f"[[{dest}]]"
+            # 实际文件名带日期前缀，链接也要带
+            today = datetime.now().strftime("%Y-%m-%d")
+            where = f"[[{today} {dest}]]"
             op = "新建笔记"
         elif action == "append_to_existing":
             where = f"[[{target}]]"
