@@ -1,8 +1,27 @@
 # inbox-pipeline
 
+> 🧠 **AI Agent Skill** — Let your agent automatically classify, refine, and archive fragments into your knowledge base.
+> Works with [OpenClaw](https://github.com/openclaw/openclaw) · [Claude Code](https://claude.com/claude-code) · and any agent runtime that can shell out.
+
 AI 驱动的个人知识库 inbox 管线 | AI-powered personal knowledge inbox pipeline
 
 把日常碎片信息（语音笔记、Flomo、邮件、播客、网页剪藏）自动分类、提炼、归档到 Obsidian 知识库。
+
+## What's this?
+
+这是一个 **AI agent skill**：后台处理你 Obsidian `inbox/capture` 里累积的所有碎片，用 AI 给每条内容判类别、提要点、决定归去哪个主档。
+
+跟你的 agent 说：
+- *"处理一下 inbox"* / *"inbox 跑一遍"* → agent 调这个 skill 自动分类 + 写回
+- *"今天 inbox 里都有啥"* → agent 读 `inbox-ai-digest.md` 给你摘要
+- *"把 RW-xxx 那条确认归档"* → agent 走写回确认流程
+
+**支持的 agent 运行时**：
+- [OpenClaw](https://github.com/openclaw/openclaw) —— 自托管多 agent 编排平台（一等公民，完整 cron 集成）
+- [Claude Code](https://claude.com/claude-code) —— 可通过 bash tool 调用
+- 任何支持 shell 执行 + cron 的 agent 框架（Cursor / Aider / Codex CLI / Continue / ...）
+
+**也能当独立 cron 脚本跑**：不需要 agent，直接加进 crontab 定时刷 inbox 也可以。
 
 ## 功能
 
