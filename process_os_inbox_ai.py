@@ -202,7 +202,11 @@ Area 总览页追加判断规则：
 
 来源类型（source）与处理倾向：
 - source=diary / daily-log / openclaw-note / meeting：我的原生记录，可正常按十分流处理
-- source=notion-flomo：来自 Flomo 的个人笔记，已在 flomo_kb 数据库存档。按十分流处理，但**没有沉淀价值的直接 archive_raw_only（不要 keep_in_review）**——原始数据已在数据库里，不需要再留 review 占位
+- source=notion-flomo：来自 Flomo 的个人笔记，**原始已在 flomo_kb 数据库永久存档**（每次 inbox-chain.sh 跑都会增量同步）。flomo_kb 是 Flomo 内容的唯一沉淀点，inbox 不做二次决策。**强制规则**：
+    ① **严禁 keep_in_review**（任何理由都不行——「有思考价值」「值得回看」都不行，这些价值已由 flomo_kb 承担）
+    ② **严禁 promote_to_note**（不创建新笔记，不复制到 OS 主档）
+    ③ 默认 action = archive_raw_only（绝大多数 Flomo 走这条）
+    ④ 例外：若内容明确是某具体类别的「事实型记录」（kids 学校事件 / health 训练数据 / work 会议决议），可走 append_to_existing 追加到对应主档；纯思考/感悟/灵感/碎片想法不走 append
 - source=webclip / social-clip：**外部网页抓取或社交媒体转存**，默认按以下规则处理：
     ① 不要当成"我的原生笔记"来写 promote_to_note
     ② note_kind 必须填 resource，不填 project
